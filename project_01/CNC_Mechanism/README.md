@@ -1,156 +1,120 @@
-# CNC Checkers System
+Smart Checkers Mechanism
 
-This project implements a CNC-controlled checkers board system that uses a magnetic mechanism underneath the board to move checker pieces. The system includes computer vision for piece detection and a full control interface.
+A fully automated checkers-playing mechanism built with CNC hardware, a PocketBeagle board, and computer vision. This project uses a magnetic pickup system to move pieces across a physical board by interpreting square coordinates and translating them into precise CNC movements.
 
-## System Components
-
-1. **Motor Control Module** (`motor_control.py`): Controls the X, Y, and Z axes of the CNC machine
-2. **Home CNC Module** (`home_cnc.py`): Handles homing procedures using limit switches
-3. **Vision System** (`vision_system.py`): Handles camera input and piece detection
-4. **Board System** (`board_system.py`): Manages coordinate conversions between board and CNC positions
-5. **Calibration System** (`calibration_system.py`): Aligns the camera view with the physical CNC coordinate system
-6. **Main CNC Checkers System** (`cnc_checkers_system.py`): Integrates all components and provides the user interface
-7. **Test Integration** (`test_integration.py`): Provides a testing framework for each component
-
-## Prerequisites
-
-- Python 3.6 or higher
-- BeagleBone Black or similar board with GPIO support
-- Adafruit_BBIO library (`pip install Adafruit_BBIO`)
-- OpenCV (`pip install opencv-python`)
-- NumPy (`pip install numpy`)
-- USB camera
-
-## Implementation Steps
-
-Follow these steps to implement and test the system incrementally:
-
-### Step 1: Motor Control and Homing
-
-You already have working implementations of `motor_control.py` and `home_cnc.py`. These provide the foundation for controlling the CNC machine.
-
-Test these components using:
+---
+Project Structure
 ```
-python test_integration.py
-```
-And select option 6 to test the calibration system. You'll need both the camera and CNC system working for this step.
-
-### Step 5: Piece Movement
-
-Test the piece movement functionality to ensure the CNC can effectively move pieces on the board:
-
-```
-python test_integration.py
+Smart Checkers Mechanism
+├── cnc_server.py             # TCP server running on PocketBeagle to handle commands
+├── motor_control.py         # Low-level stepper motor movement and homing logic
+├── remote_motor_control.py  # Windows-side client to send CNC commands over TCP
+├── home_cnc.py              # Calls homing routines for all axes (X, Y, Z)
+├── calibration_system.py    # Vision-only board calibration using corner detection
+├── vision_system.py         # OpenCV-based board and piece detection
+├── cnc_checkers.py          # Main interface for playing the game (move pieces, calibrate, etc.)
+├── board_system.py          # Handles board square to CNC position mapping
+└── README.md                # This file
 ```
 
-And select option 7 to test piece movement. This will guide you through moving a piece from one square to another.
+---
 
-### Step 6: Full System Integration
+Hardware Overview
 
-Once all individual components are working, you can integrate them into the full system:
+* **PocketBeagle** – microcontroller for real-time CNC control
+* **CNC Shield** – connects stepper drivers to PocketBeagle
+* **Stepper Motors (X, Y, Z)** – drives the magnet to pick and place checkers
+* **Limit Switches (min/max)** – for homing and movement constraints
+* **Webcam** – detects board layout and piece positions
+* **Laser-Cut Board** – checkers board mounted above mechanism
+* **Neodymium Magnet (Z-axis)** – attaches from below to move magnetic checkers pieces
 
-```
-python cnc_checkers_system.py
-```
+---
 
-This will run the complete CNC Checkers system with all components integrated.
+## Software Features
 
-## Usage Instructions
+### Homing & Initialization (`home_cnc.py`)
 
-### Calibration
+* Each axis homes to both min and max limit switches
+* System calculates travel range and centers to a known position
+* After homing, the position is reset to (0, 0, 0)
 
-Before using the system, you'll need to calibrate it:
+### Board Calibration (`calibration_system.py`)
 
-1. Start the system (`python cnc_checkers_system.py`)
-2. Select option 4 from the menu ("Calibrate system")
-3. Follow the prompts to position the CNC at each corner of the board
-4. The system will calculate the board position and dimensions
+* Uses vision system to detect board corners
+* Combines known physical board size with CNC travel limits
+* Automatically maps (x, y) board squares to CNC mm positions
 
-### Moving Pieces
+### Vision System (`vision_system.py`)
 
-To move a checker piece:
+* Uses OpenCV to:
 
-1. Select option 2 from the main menu ("Move piece")
-2. Enter the starting square coordinates (X, Y) where the piece is located
-3. Enter the destination square coordinates (X, Y)
-4. The system will:
-   - Move to the starting position
-   - Raise the magnet to attach to the piece
-   - Move to the destination
-   - Lower the magnet to release the piece
+  * Detect board corners
+  * Warp and align camera view
+  * Detect black pieces using HSV color thresholds
+* Can be tested independently with `scan_board()` function
 
-### Scanning the Board
+### CNC Communication (`cnc_server.py` + `remote_motor_control.py`)
 
-To scan the board and detect pieces:
+* Sends and receives commands like:
 
-1. Select option 1 from the main menu ("Scan board")
-2. The system will capture an image from the camera and detect all pieces
-3. The board state will be displayed both graphically and as text
+  * `MOVE startX startY endX endY`
+  * `JOG_TO x_mm y_mm z_mm`
+  * `GET_Z_LIMITS`
+* Position and limit updates are tracked on both ends
 
-### Auto-Play
+### Piece Movement (`cnc_checkers.py`)
 
-The system includes a simple demo feature to automatically make a move:
+* Lets user input a start and destination square
+* The magnet lifts from below, moves across the board, and releases the piece
+* Movement avoids existing pieces if needed (partially implemented)
 
-1. Select option 7 from the main menu ("Auto-play move")
-2. The system will scan the board, find a piece, and move it to a valid adjacent square
+---
 
-## Troubleshooting
+## How to Run
 
-- **Camera Not Detected**: Ensure your USB camera is connected and recognized by the system
-- **Limit Switch Issues**: Check the wiring of your limit switches and their configuration in `home_cnc.py`
-- **Movement Problems**: Verify the motor control settings in `motor_control.py`
-- **Board Detection Failures**: Adjust the board detection parameters in `vision_system.py`
-- **Calibration Issues**: Make sure the lighting is good for the camera and there's clear contrast between the board and background
+1. **Start the CNC server on the PocketBeagle**:
 
-## Extending the System
+   ```bash
+   python3 cnc_server.py
+   ```
 
-You can extend this system in several ways:
+2. **From your PC, run the client menu**:
 
-1. **Game Logic**: Add checkers game rules to validate moves
-2. **AI Player**: Implement an AI to play against a human player
-3. **Multiple Games**: Extend the system to support other board games like chess
-4. **User Interface**: Create a graphical user interface for easier interaction
+   ```bash
+   python remote_motor_control.py
+   ```
 
-## File Structure
+3. **Commands available**:
 
-```
-CNC_Checkers/
-│
-├── motor_control.py        # CNC motor control module
-├── home_cnc.py             # CNC homing functionality
-├── vision_system.py        # Camera and piece detection
-├── board_system.py         # Board coordinate system
-├── calibration_system.py   # System calibration
-├── cnc_checkers_system.py  # Main system interface
-└── test_integration.py     # Testing framework
-```s 1, 2, and 3 to test motor control, limit switches, and homing.
+   * Homing
+   * Calibration
+   * Move a piece
+   * View camera and scan board
 
-### Step 2: Board System
+---
 
-The board system (`board_system.py`) manages coordinate conversions between the checkers board and the CNC machine. This component doesn't have hardware dependencies, so you can implement and test it independently.
+## Known Issues
 
-Test with:
-```
-python board_system.py
-```
+* Sometimes false limits are triggered due to electrical noise → use debounce
+* Vision system may misdetect pieces in low lighting
+* Y-axis direction required inversion due to mechanical configuration
+* Homing must complete successfully before sending any move commands
 
-### Step 3: Vision System
+---
 
-The vision system (`vision_system.py`) handles camera input and piece detection. You can implement and test this component next:
+## Future Work
 
-Test with:
-```
-python vision_system.py
-```
+* Add full multi-piece path planning with collision avoidance
+* Improve Z-axis control to dynamically vary pickup height
+* Use ArUco markers or chessboard pattern for more robust calibration
+* Integrate GUI for easier interaction
 
-Make sure your USB camera is connected. This test will check camera access, board detection, and piece recognition.
+---
 
-### Step 4: Calibration System
+## Author
 
-The calibration system (`calibration_system.py`) aligns the camera view with the physical CNC coordinate system. This component depends on the vision system, board system, and motor control.
+**Mert Culcu**
+EDES 301 Final Project – Smart Checkers Mechanism
 
-Test with:
-```
-python test_integration.py
-```
-And select option
+---
