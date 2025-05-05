@@ -1,9 +1,9 @@
-Smart Checkers Mechanism
+# Smart Checkers Mechanism
 
 A fully automated checkers-playing mechanism built with CNC hardware, a PocketBeagle board, and computer vision. This project uses a magnetic pickup system to move pieces across a physical board by interpreting square coordinates and translating them into precise CNC movements.
 
 ---
-Project Structure
+## Project Structure
 ```
 Smart Checkers Mechanism
 ├── cnc_server.py             # TCP server running on PocketBeagle to handle commands
@@ -19,7 +19,7 @@ Smart Checkers Mechanism
 
 ---
 
-Hardware Overview
+## Hardware Overview
 
 * **PocketBeagle** – microcontroller for real-time CNC control
 * **CNC Shield** – connects stepper drivers to PocketBeagle
