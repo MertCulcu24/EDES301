@@ -1,0 +1,14 @@
+"Part";"Value";"Device";"Package";"Description";"MF";"MPN";"OC_FARNELL";"OC_NEWARK";"POPULARITY";"SPICEMODEL";"SPICEPREFIX";
+"CN1";"";"ADAFRUIT_ILI9325_LCD1.0MM";"ADAFRUIT_ILI9325_28INCH_TS";"2.8" ILI9325-based TFT LCD w/Integrated Touch Screen";"";"";"";"";"";"";"";
+"LED1";"";"LED_BLUE5MM";"LED5MM";"LED";"";"";"";"";"93";"";"";
+"LED2";"";"LED_GREEN5MM";"LED5MM";"LED";"";"";"";"";"93";"";"";
+"LED3";"";"LED_RED5MM";"LED5MM";"LED";"";"";"";"";"93";"";"";
+"R1";"";"POTENTIOMETER_PT-10";"PT-10";"Potentiometer";"";"";"";"";"15";"POT";"X";
+"R2";"";"POTENTIOMETER_2PT-10";"PT-10";"Potentiometer";"";"";"";"";"15";"POT";"X";
+"R3";"330";"GHI-BASICCOMPONENTS_RESISTOR-(INCH)-0402";"GHI-BASICCOMPONENTS_0402";"Basic SMD Resistors";"";"";"";"";"";"";"";
+"R4";"330";"GHI-BASICCOMPONENTS_RESISTOR-(INCH)-0402";"GHI-BASICCOMPONENTS_0402";"Basic SMD Resistors";"";"";"";"";"";"";"";
+"R6";"330";"GHI-BASICCOMPONENTS_RESISTOR-(INCH)-0402";"GHI-BASICCOMPONENTS_0402";"Basic SMD Resistors";"";"";"";"";"";"";"";
+"S1";"BUTTON_1";"BUTTON_1";"RDT1034";"PUSH SWITCH";"";"";"";"";"4";"";"";
+"S2";"BUTTON_2";"BUTTON_2";"RDT1034";"PUSH SWITCH";"";"";"";"";"4";"";"";
+"U1";"POCKETBEAGLE";"POCKETBEAGLE";"POCKETBEAGLE";"";"";"";"";"";"";"";"";
+"X1";"";"USB_CONNECTOR";"USB-A003";"USB connector";"";"";"unknown";"unknown";"1";"";"";
