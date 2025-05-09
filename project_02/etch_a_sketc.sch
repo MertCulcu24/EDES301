@@ -3,7 +3,7 @@
 <eagle version="9.6.2">
 <drawing>
 <settings>
-<setting alwaysvectorfont="no"/>
+<setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
@@ -2049,6 +2049,7 @@ In this library the device names are the same as the pin names of the symbols, t
 </text>
 <text x="190.5" y="127" size="1.778" layer="91">LEDS
 </text>
+<text x="345.44" y="20.32" size="1.778" layer="91">Mert Culcu</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0" smashed="yes">
